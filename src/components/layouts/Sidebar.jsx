@@ -1,9 +1,13 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import logoDark from "../../assets/logos/logo-kujaw-dark.png";
+import logoLight from "../../assets/logos/logo-kujaw-light.png";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Sidebar({ isOpen, setIsOpen }) {
+  const { user } = useAuth();
   const location = useLocation();
-  const isAdmin = location.pathname.includes("/admin");
+  const isAdmin = user?.role === "admin";
   const basePath = isAdmin ? "/admin" : "/sales";
 
   // Track open state for all dropdowns
@@ -195,8 +199,9 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           h-full overflow-hidden flex flex-col dark:bg-gray-800 dark:shadow-gray-900/30  `}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between h-16 px-4 transition-colors duration-200 bg-blue-600 dark:bg-blue-700">
-            <h2 className="text-xl font-bold text-white">Kujaw</h2>
+          <div className="flex items-center justify-between h-16 px-4 transition-colors duration-200 bg-gray-200 dark:bg-gray-900">
+            <img src={logoDark} alt="Logo" className="hidden w-40 dark:block" />
+            <img src={logoLight} alt="Logo" className="w-40 dark:hidden" />
             <button
               className="p-2 text-white transition-colors duration-200 rounded-lg md:hidden hover:bg-blue-700 dark:hover:bg-blue-800"
               onClick={() => setIsOpen(false)}
@@ -305,7 +310,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
           <div className="p-4 transition-colors duration-200 border-t bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
             <NavLink
-              to={`${basePath}/profile`}
+              to={isAdmin ? "/admin/profile" : "/sales/profile"}
               className={({ isActive }) => `
                 flex items-center px-3 py-2 text-gray-600 rounded-lg transition-colors duration-200 group hover:bg-gray-100 dark:hover:bg-gray-700
                 ${

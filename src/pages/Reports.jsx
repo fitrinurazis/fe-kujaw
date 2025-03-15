@@ -100,7 +100,10 @@ export default function Reports() {
           setErrorMessage(
             "Peringatan: Laporan mencakup tanggal di masa depan. Data mungkin tidak lengkap."
           );
-          setShowErrorToast(true);
+          setShowErrorToast(false);
+          setTimeout(() => {
+            setShowErrorToast(false);
+          }, 3000);
         }
       } else {
         throw new Error(
@@ -114,6 +117,9 @@ export default function Reports() {
           "Gagal membuat laporan. Silakan coba rentang tanggal atau jenis laporan yang berbeda."
       );
       setShowErrorToast(true);
+      setTimeout(() => {
+        setShowErrorToast(false);
+      }, 3000);
     }
   };
 

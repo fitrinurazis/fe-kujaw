@@ -46,15 +46,15 @@ const ReportTable = ({ data, reportType }) => {
         ];
       case "income-expense":
         return [
-          { key: "period", label: "Period" },
+          { key: "period", label: "Periode" },
           {
             key: "totalIncome",
-            label: "Pemasukan",
+            label: "pemasukan",
             format: (value) => formatCurrency(value),
           },
           {
             key: "totalExpense",
-            label: "Pengeluaran",
+            label: "pengeluaran",
             format: (value) => formatCurrency(value),
           },
           {
