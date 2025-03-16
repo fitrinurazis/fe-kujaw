@@ -57,10 +57,19 @@ export default function CustomerForm({ onSubmit, initialData }) {
     onSubmit(formData);
   };
 
-  const renderFormField = (label, name, type = "text", options = null) => (
+  const renderFormField = (
+    label,
+    name,
+    type = "text",
+    options = null,
+    isRequired = true
+  ) => (
     <div className="space-y-1.5">
       <label className="block text-xs font-medium text-gray-700 transition-colors duration-200 sm:text-sm dark:text-gray-300">
-        {label} <span className="text-red-500 dark:text-red-400">*</span>
+        {label}{" "}
+        {isRequired && (
+          <span className="text-red-500 dark:text-red-400">*</span>
+        )}
       </label>
       {options ? (
         <select
@@ -68,7 +77,7 @@ export default function CustomerForm({ onSubmit, initialData }) {
           value={formData[name]}
           onChange={handleChange}
           className="block w-full px-3 py-2 text-sm transition-colors duration-200 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400"
-          required
+          required={isRequired}
         >
           <option
             value=""
@@ -91,7 +100,7 @@ export default function CustomerForm({ onSubmit, initialData }) {
           value={formData[name]}
           onChange={handleChange}
           className="block w-full px-3 py-2 text-sm transition-colors duration-200 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400 dark:focus:border-blue-400 dark:placeholder-gray-400"
-          required
+          required={isRequired}
           autoComplete={
             name === "email" ? "email" : name === "phone" ? "tel" : "off"
           }
@@ -107,10 +116,16 @@ export default function CustomerForm({ onSubmit, initialData }) {
     >
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
         {renderFormField("Nama", "name")}
-        {renderFormField("Email", "email", "email")}
-        {renderFormField("No. Hp / WA", "phone")}
-        {renderFormField("NIM Siakad", "nimSiakad")}
-        {renderFormField("Password Siakad", "passwordSiakad")}
+        {renderFormField("Email", "email", "email", null, false)}
+        {renderFormField("No. Hp / WA", "phone", "text", null, false)}
+        {renderFormField("NIM Siakad", "nimSiakad", "text", null, false)}
+        {renderFormField(
+          "Password Siakad",
+          "passwordSiakad",
+          "text",
+          null,
+          false
+        )}
         {renderFormField("Kelas", "class_id", null, classes)}
         {renderFormField("Program Studi", "progdi_id", null, progdis)}
         {renderFormField("Sales", "sales_id", null, salesList)}
