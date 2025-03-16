@@ -71,8 +71,8 @@ export default function Profile() {
   const showAvatarPreview = () => {
     const avatarUrl =
       avatarPreview ||
-      (profile?.avatar
-        ? `${import.meta.env.VITE_API_URL}/uploads/avatars/${profile?.avatar}`
+      (authUser?.avatar
+        ? `${import.meta.env.VITE_API_URL}/uploads/avatars/${authUser?.avatar}`
         : "/avatar.jpg");
 
     setImagePreviewModal({
@@ -154,9 +154,9 @@ export default function Profile() {
                 <img
                   src={
                     avatarPreview ||
-                    (profile?.avatar
+                    (authUser?.avatar
                       ? `${import.meta.env.VITE_API_URL}/uploads/avatars/${
-                          profile?.avatar
+                          authUser?.avatar
                         }`
                       : "/avatar.jpg")
                   }
