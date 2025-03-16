@@ -114,7 +114,7 @@ export default function TransactionIncomeTable({
             <div>
               <span className="text-gray-500 transition-colors duration-200 dark:text-gray-400">
                 Pelanggan:
-              </span>{" "}
+              </span>
               <span className="transition-colors duration-200 dark:text-gray-300">
                 {transactionItem.customer?.name || "-"}
               </span>
@@ -122,7 +122,7 @@ export default function TransactionIncomeTable({
             <div>
               <span className="text-gray-500 transition-colors duration-200 dark:text-gray-400">
                 Sales:
-              </span>{" "}
+              </span>
               <span className="transition-colors duration-200 dark:text-gray-300">
                 {transactionItem.user?.name || "-"}
               </span>
@@ -130,7 +130,7 @@ export default function TransactionIncomeTable({
             <div>
               <span className="text-gray-500 transition-colors duration-200 dark:text-gray-400">
                 Tipe:
-              </span>{" "}
+              </span>
               <span className="px-1.5 py-0.5 bg-green-100 text-green-800 text-xs rounded dark:bg-green-900/20 dark:text-green-400 transition-colors duration-200">
                 {transactionItem.type}
               </span>
@@ -138,7 +138,7 @@ export default function TransactionIncomeTable({
             <div className="col-span-2">
               <span className="text-gray-500 transition-colors duration-200 dark:text-gray-400">
                 Total:
-              </span>{" "}
+              </span>
               <span className="font-semibold transition-colors duration-200 dark:text-white">
                 {formatCurrency(transactionItem.totalAmount)}
               </span>
@@ -199,28 +199,28 @@ export default function TransactionIncomeTable({
       <table className="w-full">
         <thead className="transition-colors duration-200 bg-gray-50 dark:bg-gray-700">
           <tr>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
+            <th className="w-20 px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
               Tanggal
             </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
+            <th className="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 w-36 dark:text-gray-300">
               Pelanggan
             </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
+            <th className="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
               Sales
             </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
+            <th className="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
               Deskripsi
             </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
+            <th className="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
               Tipe
             </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
+            <th className="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
               Bukti Transaksi
             </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
+            <th className="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
               Total Pemasukan
             </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
+            <th className="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase transition-colors duration-200 dark:text-gray-300">
               Status
             </th>
             {isAdmin && (
@@ -242,24 +242,24 @@ export default function TransactionIncomeTable({
               }}
               className="transition-colors cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/30"
             >
-              <td className="px-6 py-4 transition-colors duration-200 whitespace-nowrap dark:text-gray-300">
+              <td className="w-20 px-3 py-4 transition-colors duration-200 whitespace-nowrap dark:text-gray-300">
                 {formatDate(transactionItem.transactionDate)}
               </td>
-              <td className="px-6 py-4 transition-colors duration-200 whitespace-nowrap dark:text-gray-300">
+              <td className="px-3 py-4 transition-colors duration-200 whitespace-nowrap dark:text-gray-300">
                 {transactionItem.customer?.name || "-"}
               </td>
-              <td className="px-6 py-4 transition-colors duration-200 whitespace-nowrap dark:text-gray-300">
+              <td className="px-3 py-4 transition-colors duration-200 whitespace-nowrap dark:text-gray-300">
                 {transactionItem.user?.name || "-"}
               </td>
-              <td className="px-6 py-4 transition-colors duration-200 whitespace-nowrap dark:text-gray-300">
+              <td className="px-3 py-4 transition-colors duration-200 whitespace-nowrap dark:text-gray-300">
                 {transactionItem.description}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-3 py-4 whitespace-nowrap">
                 <span className="px-2 py-1 text-xs font-semibold text-green-800 transition-colors duration-200 bg-green-100 rounded-full dark:bg-green-900/20 dark:text-green-400">
                   {transactionItem.type}
                 </span>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-3 py-4 whitespace-nowrap">
                 {transactionItem.proofImage ? (
                   <button
                     onClick={(e) => {
@@ -277,14 +277,14 @@ export default function TransactionIncomeTable({
                   </span>
                 )}
               </td>
-              <td className="px-6 py-4 font-medium transition-colors duration-200 whitespace-nowrap dark:text-white">
+              <td className="px-3 py-4 font-medium transition-colors duration-200 whitespace-nowrap dark:text-white">
                 {formatCurrency(transactionItem.totalAmount)}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-3 py-4 whitespace-nowrap">
                 {renderStatusBadge(transactionItem.status)}
               </td>
               {isAdmin && (
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-3 py-4 whitespace-nowrap">
                   <div className="flex space-x-3">
                     <button
                       onClick={(e) => {

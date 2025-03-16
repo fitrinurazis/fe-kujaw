@@ -157,12 +157,38 @@ export const deleteTransaction = createAsyncThunk(
   "transactions/delete",
   async ({ id, type }, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}/api/transactions/${id}`);
+      // Gunakan endpoint yang sesuai berdasarkan tipe transaksi
+      let endpoint;
+      if (type === "pemasukan") {
+        endpoint = `${API_URL}/api/transactions/income/${id}`;
+      } else if (type === "pengeluaran") {
+        endpoint = `${API_URL}/api/transactions/expense/${id}`;
+      } else {
+        throw new Error("Tipe transaksi tidak valid");
+      }
+
+      await axios.delete(endpoint);
       return { id, type };
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: "Failed to delete transaction" }
-      );
+      // Tangani error dengan lebih detail
+      if (error.response) {
+        // Server merespons dengan status error
+        return rejectWithValue(
+          error.response.data || {
+            message: `Failed to delete transaction: ${error.response.status} ${error.response.statusText}`,
+          }
+        );
+      } else if (error.request) {
+        // Request dibuat tapi tidak ada respons
+        return rejectWithValue({
+          message: "No response from server. Please check your connection.",
+        });
+      } else {
+        // Error lainnya
+        return rejectWithValue({
+          message: error.message || "Failed to delete transaction",
+        });
+      }
     }
   }
 );

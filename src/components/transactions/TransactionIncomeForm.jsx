@@ -83,6 +83,13 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
         const imageUrl = `${API_URL}/uploads/${initialData.proofImage}`;
         setProofImagePreview(imageUrl);
       }
+
+      // Make sure we're setting the form data with the correct date
+      setFormData({
+        ...initialData,
+        transactionDate:
+          initialData.transactionDate || new Date().toISOString().split("T")[0],
+      });
     }
   }, [initialData]);
 
@@ -106,6 +113,7 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
       setProofImagePreview(previewURL);
     }
   };
+
   // Update product price and total when productId or quantity changes
   const updateDetailItem = (index, field, value) => {
     const updatedDetails = [...details];
@@ -137,6 +145,7 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
 
     setDetails(updatedDetails);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -166,6 +175,8 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
       formDataToSend.append("userId", formData.userId);
       formDataToSend.append("customerId", formData.customerId);
       formDataToSend.append("description", formData.description);
+
+      // Ensure we're using the selected date, not today's date
       formDataToSend.append("transactionDate", formData.transactionDate);
 
       // Add the file
@@ -185,7 +196,7 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
         userId: formData.userId,
         customerId: formData.customerId,
         description: formData.description,
-        transactionDate: formData.transactionDate,
+        transactionDate: formData.transactionDate, // Ensure we're using the selected date
         details: formattedDetails,
       };
 

@@ -97,15 +97,10 @@ export default function TransactionsIncome() {
           message: "Transaksi pemasukan berhasil diperbarui!",
         });
 
-        addNotification(
-          `Transaksi pemasukan #${editingTransaction.id} berhasil diperbarui`,
-          "transaction"
-        );
-
         setIsFormOpen(false);
         setEditingTransaction(null);
       } else {
-        const result = await dispatch(
+        await dispatch(
           createIncomeTransaction({
             data: formData,
             isFormData: isFormData,
@@ -117,16 +112,6 @@ export default function TransactionsIncome() {
           title: "Berhasil",
           message: "Transaksi pemasukan berhasil dibuat!",
         });
-
-        addTransactionNotification(
-          "pemasukan",
-          formData instanceof FormData
-            ? Number(formData.get("totalAmount") || 0)
-            : Number(formData.totalAmount || 0),
-          formData instanceof FormData
-            ? formData.get("customerName")
-            : formData.customerName
-        );
 
         setIsFormOpen(false);
       }
@@ -150,11 +135,6 @@ export default function TransactionsIncome() {
         title: "Berhasil",
         message: `Status transaksi diperbarui menjadi ${status}!`,
       });
-
-      addNotification(
-        `Status transaksi #${id} diperbarui menjadi ${status}`,
-        "status"
-      );
     } catch (error) {
       setErrorPopup({
         isVisible: true,
@@ -195,11 +175,6 @@ export default function TransactionsIncome() {
         title: "Berhasil",
         message: "Transaksi pemasukan berhasil dihapus!",
       });
-
-      addNotification(
-        `Transaksi pemasukan "${deleteModal.transactionName}" berhasil dihapus`,
-        "transaction"
-      );
 
       dispatch(fetchTransactions());
     } catch (error) {

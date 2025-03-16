@@ -78,16 +78,10 @@ export default function TransactionsExpense() {
           message: "Transaksi pengeluaran berhasil diperbarui!",
         });
 
-        // Tambahkan notifikasi ketika transaksi berhasil diperbarui
-        addNotification(
-          `Transaksi pengeluaran #${editingTransaction.id} berhasil diperbarui`,
-          "transaction"
-        );
-
         setIsFormOpen(false);
         setEditingTransaction(null);
       } else {
-        const result = await dispatch(
+        await dispatch(
           createExpenseTransaction({
             data: formData,
             isFormData: isFormData,
@@ -99,14 +93,6 @@ export default function TransactionsExpense() {
           title: "Berhasil",
           message: "Transaksi pengeluaran berhasil dibuat!",
         });
-
-        // Tambahkan notifikasi ketika transaksi pengeluaran baru berhasil dibuat
-        addTransactionNotification(
-          "pengeluaran",
-          formData instanceof FormData
-            ? Number(formData.get("totalAmount") || 0)
-            : Number(formData.totalAmount || 0)
-        );
 
         setIsFormOpen(false);
       }
@@ -129,12 +115,6 @@ export default function TransactionsExpense() {
         title: "Berhasil",
         message: `Status transaksi diperbarui menjadi ${status}!`,
       });
-
-      // Tambahkan notifikasi ketika status transaksi diperbarui
-      addNotification(
-        `Status transaksi #${id} diperbarui menjadi ${status}`,
-        "status"
-      );
     } catch (error) {
       setErrorPopup({
         isVisible: true,
@@ -166,6 +146,14 @@ export default function TransactionsExpense() {
   };
 
   const handleDeleteClick = (transaction) => {
+    if (!transaction || !transaction.id) {
+      setErrorPopup({
+        isVisible: true,
+        message: "Data transaksi tidak valid",
+      });
+      return;
+    }
+
     setDeleteModal({
       isOpen: true,
       transactionId: transaction.id,
@@ -175,6 +163,19 @@ export default function TransactionsExpense() {
 
   const handleDeleteConfirm = async () => {
     try {
+      if (!deleteModal.transactionId) {
+        setErrorPopup({
+          isVisible: true,
+          message: "ID transaksi tidak valid",
+        });
+        return;
+      }
+
+      console.log(
+        "Menghapus transaksi pengeluaran dengan ID:",
+        deleteModal.transactionId
+      );
+
       await dispatch(
         deleteTransaction({
           id: deleteModal.transactionId,
@@ -194,17 +195,27 @@ export default function TransactionsExpense() {
         message: "Transaksi pengeluaran berhasil dihapus!",
       });
 
-      // Tambahkan notifikasi ketika transaksi dihapus
-      addNotification(
-        `Transaksi pengeluaran "${deleteModal.transactionName}" berhasil dihapus`,
-        "transaction"
-      );
-
       dispatch(fetchTransactions());
     } catch (error) {
+      console.error("Error saat menghapus transaksi:", error);
+
+      let errorMessage = "Gagal menghapus transaksi pengeluaran";
+
+      if (
+        error.message ===
+        "Route not found. Please check your URL and try again."
+      ) {
+        errorMessage =
+          "Endpoint API tidak ditemukan. Silakan hubungi administrator.";
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       setErrorPopup({
         isVisible: true,
-        message: error.message || "Gagal menghapus transaksi pengeluaran",
+        message: errorMessage,
       });
     }
   };
