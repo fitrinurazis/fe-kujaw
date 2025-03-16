@@ -24,14 +24,9 @@ export default function TransactionExpenseForm({
     }
   );
 
-  // For transaction proof file
   const [proofImageFile, setProofImageFile] = useState(null);
   const [proofImagePreview, setProofImagePreview] = useState(null);
-
-  // For formatted total amount display
   const [displayTotalAmount, setDisplayTotalAmount] = useState("");
-
-  // For managing transaction details
   const [details, setDetails] = useState([
     {
       itemName: "",
@@ -56,7 +51,7 @@ export default function TransactionExpenseForm({
 
       // Set proof image preview if available
       if (initialData.proofImage) {
-        const imageUrl = `${API_URL}/uploads/${initialData.proofImage}`;
+        const imageUrl = `${API_URL}/uploads/proofs/${initialData.proofImage}`;
         setProofImagePreview(imageUrl);
       }
     }
@@ -204,7 +199,7 @@ export default function TransactionExpenseForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full p-3 mx-auto space-y-4 transition-colors duration-200 sm:p-4 sm:space-y-6 dark:text-gray-200"
+      className="w-full p-3 mx-auto space-y-2 transition-colors duration-200 sm:p-4 sm:space-y-6 dark:text-gray-200"
     >
       {/* Basic Info Section */}
       <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
@@ -226,7 +221,7 @@ export default function TransactionExpenseForm({
               })
             }
             dateFormat="dd/MM/yyyy"
-            className="block w-full px-3 py-2 text-sm transition-colors duration-200 border border-gray-300 rounded-md shadow-sm sm:text-base focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
+            className="block w-full py-2 pl-3 pr-32 text-sm transition-colors duration-200 border border-gray-300 rounded-md shadow-sm sm:text-base focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
             placeholderText="Select date"
             required
             isClearable
@@ -346,7 +341,7 @@ export default function TransactionExpenseForm({
                 )}
               </div>
 
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 sm:gap-3">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-2 sm:gap-2">
                 {/* Item Name Input */}
                 <div>
                   <label className="block mb-1 text-xs font-medium text-gray-700 transition-colors duration-200 sm:text-sm dark:text-gray-400">
@@ -427,7 +422,7 @@ export default function TransactionExpenseForm({
                 </div>
 
                 {/* Total Price Display */}
-                <div className="md:col-start-3">
+                <div>
                   <label className="block mb-1 text-xs font-medium text-gray-700 transition-colors duration-200 sm:text-sm dark:text-gray-400">
                     Total Harga
                   </label>
@@ -444,25 +439,27 @@ export default function TransactionExpenseForm({
       </div>
 
       {/* Total Amount Display */}
-      <div className="pt-4 mt-4 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex flex-col items-end justify-end">
-          <div className="text-sm text-gray-600 transition-colors duration-200 dark:text-gray-400">
-            Total Semua:
-          </div>
-          <div className="text-lg font-bold text-gray-900 transition-colors duration-200 sm:text-xl dark:text-white">
-            {displayTotalAmount || "Rp 0"}
+      <div className="flex items-center justify-between">
+        <div className="pt-4 mt-4 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col items-start justify-end">
+            <div className="text-sm text-gray-600 transition-colors duration-200 dark:text-gray-400">
+              Total Semua:
+            </div>
+            <div className="text-lg font-bold text-gray-900 transition-colors duration-200 sm:text-xl dark:text-white">
+              {displayTotalAmount || "Rp 0"}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Submit Button */}
-      <div className="flex justify-end pt-4 mt-4 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700">
-        <button
-          type="submit"
-          className="px-4 py-2 text-sm font-medium text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800"
-        >
-          {initialData ? "Perbarui" : "Tambah"}
-        </button>
+        {/* Submit Button */}
+        <div className="flex justify-end pt-4 mt-4 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700">
+          <button
+            type="submit"
+            className="px-4 py-2 text-sm font-medium text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800"
+          >
+            {initialData ? "Perbarui" : "Tambah"}
+          </button>
+        </div>
       </div>
     </form>
   );

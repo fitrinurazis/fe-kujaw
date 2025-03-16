@@ -171,11 +171,6 @@ export default function TransactionsExpense() {
         return;
       }
 
-      console.log(
-        "Menghapus transaksi pengeluaran dengan ID:",
-        deleteModal.transactionId
-      );
-
       await dispatch(
         deleteTransaction({
           id: deleteModal.transactionId,
@@ -197,8 +192,6 @@ export default function TransactionsExpense() {
 
       dispatch(fetchTransactions());
     } catch (error) {
-      console.error("Error saat menghapus transaksi:", error);
-
       let errorMessage = "Gagal menghapus transaksi pengeluaran";
 
       if (
@@ -242,7 +235,7 @@ export default function TransactionsExpense() {
 
       {/* Transaction Form Modal */}
       {isFormOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center ">
           <div
             className="absolute inset-0 bg-black opacity-50 dark:opacity-60"
             onClick={() => setIsFormOpen(false)}

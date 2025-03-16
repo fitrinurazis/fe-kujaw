@@ -119,7 +119,7 @@ export default function TransactionIncomeTable({
           </div>
 
           <div className="grid grid-cols-2 mt-3 text-sm gap-x-4 gap-y-2">
-            <div>
+            <div className="flex flex-col">
               <span className="text-gray-500 transition-colors duration-200 dark:text-gray-400">
                 Pelanggan:
               </span>
@@ -127,7 +127,7 @@ export default function TransactionIncomeTable({
                 {transactionItem.customer?.name || "-"}
               </span>
             </div>
-            <div>
+            <div className="flex flex-col">
               <span className="text-gray-500 transition-colors duration-200 dark:text-gray-400">
                 Sales:
               </span>
@@ -135,7 +135,7 @@ export default function TransactionIncomeTable({
                 {transactionItem.user?.name || "-"}
               </span>
             </div>
-            <div>
+            <div className="col-span-2">
               <span className="text-gray-500 transition-colors duration-200 dark:text-gray-400">
                 Tipe:
               </span>

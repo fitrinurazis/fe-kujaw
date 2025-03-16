@@ -41,11 +41,8 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
     }
   );
 
-  // Untuk file bukti transaksi
   const [proofImageFile, setProofImageFile] = useState(null);
   const [proofImagePreview, setProofImagePreview] = useState(null);
-
-  // Initial details state
   const [details, setDetails] = useState([
     {
       productId: "",
@@ -55,17 +52,14 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
     },
   ]);
 
-  // Load data on component mount
   useEffect(() => {
     dispatch(getCustomers());
     dispatch(getProducts());
     dispatch(getSales());
   }, [dispatch]);
 
-  // Initialize data when initialData changes
   useEffect(() => {
     if (initialData) {
-      // Initialize details if available
       if (initialData.details && initialData.details.length > 0) {
         const detailsWithPrices = initialData.details.map((detail) => ({
           productId: detail.productId,
@@ -78,24 +72,19 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
         setDetails(detailsWithPrices);
       }
 
-      // Initialize proof image preview
       if (initialData.proofImage) {
-        const imageUrl = `${API_URL}/uploads/${initialData.proofImage}`;
+        const imageUrl = `${API_URL}/uploads/proofs/${initialData.proofImage}`;
         setProofImagePreview(imageUrl);
       }
 
-      // Format tanggal untuk inisialisasi
       const formatDateForInitialization = (dateString) => {
         if (!dateString) return new Date().toISOString();
 
-        // Jika tanggal sudah dalam format ISO, gunakan langsung
         if (dateString.includes("T")) return dateString;
 
-        // Jika hanya tanggal (YYYY-MM-DD), tambahkan waktu default (10:30:00)
         return `${dateString}T10:30:00Z`;
       };
 
-      // Make sure we're setting the form data with the correct date
       setFormData({
         ...initialData,
 
@@ -106,7 +95,6 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
     }
   }, [initialData]);
 
-  // Calculate total transaction amount
   const calculateTotalAmount = () => {
     return details.reduce(
       (total, item) => total + parseFloat(item.totalPrice || 0),
@@ -114,10 +102,8 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
     );
   };
 
-  // Display formatted total amount
   const displayTotalAmount = formatToRupiah(calculateTotalAmount());
 
-  // Handle file selection
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -126,19 +112,15 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
       setProofImagePreview(previewURL);
     }
   };
-
-  // Update product price and total when productId or quantity changes
   const updateDetailItem = (index, field, value) => {
     const updatedDetails = [...details];
     updatedDetails[index][field] = value;
 
-    // If product changed, update the price from products data
     if (field === "productId") {
       const selectedProduct = products.find(
         (p) => p.id.toString() === value.toString()
       );
       if (selectedProduct) {
-        // Convert string price to number
         const price = parseFloat(selectedProduct.price);
         updatedDetails[index].pricePerUnit = price;
         updatedDetails[index].totalPrice =
@@ -149,7 +131,6 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
       }
     }
 
-    // If quantity changed, recalculate total price
     if (field === "quantity") {
       const qty = parseInt(value) || 0;
       updatedDetails[index].totalPrice =
@@ -159,10 +140,8 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
     setDetails(updatedDetails);
   };
 
-  // Perbaikan pada useEffect untuk initialData
   useEffect(() => {
     if (initialData) {
-      // Initialize details if available
       if (initialData.details && initialData.details.length > 0) {
         const detailsWithPrices = initialData.details.map((detail) => ({
           productId: detail.productId,
@@ -178,24 +157,18 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
 
       // Initialize proof image preview
       if (initialData.proofImage) {
-        const imageUrl = `${API_URL}/uploads/${initialData.proofImage}`;
+        const imageUrl = `${API_URL}/uploads/proofs/${initialData.proofImage}`;
         setProofImagePreview(imageUrl);
       }
 
-      // Format tanggal dengan benar untuk editing
       let formattedDate = initialData.transactionDate;
 
-      // Jika tanggal tidak dalam format ISO, tambahkan waktu default
       if (formattedDate && !formattedDate.includes("T")) {
         formattedDate = `${formattedDate}T10:30:00Z`;
       } else if (!formattedDate) {
-        // Jika tidak ada tanggal, gunakan tanggal hari ini dengan waktu default
         formattedDate = new Date().toISOString();
       }
 
-      console.log("Initializing form with date:", formattedDate);
-
-      // Set form data dengan tanggal yang sudah diformat
       setFormData({
         ...initialData,
         transactionDate: formattedDate,
@@ -203,7 +176,6 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
     }
   }, [initialData]);
 
-  // Perbaikan pada handleSubmit untuk update
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -213,7 +185,6 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
       return;
     }
 
-    // Check if products are selected
     if (details.some((detail) => !detail.productId)) {
       alert("Silakan pilih semua produk terlebih dahulu");
       return;
@@ -227,7 +198,6 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
         status: item.status || "menunggu",
       };
 
-      // Jika ini adalah update dan detail memiliki ID, sertakan ID
       if (item.id) {
         detailData.id = item.id;
       }
@@ -235,32 +205,21 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
       return detailData;
     });
 
-    // Pastikan tanggal dalam format ISO dengan waktu
     let formattedDate = formData.transactionDate;
     if (!formattedDate.includes("T")) {
       formattedDate = `${formattedDate}T10:30:00Z`;
     }
 
-    console.log("Submitting with transaction date:", formattedDate);
-
     if (proofImageFile) {
-      // Create FormData for the entire request
       const formDataToSend = new FormData();
 
       // Add basic transaction data
       formDataToSend.append("userId", formData.userId);
       formDataToSend.append("customerId", formData.customerId);
       formDataToSend.append("description", formData.description);
-
-      // Ensure we're using the correctly formatted date
       formDataToSend.append("transactionDate", formattedDate);
-
-      // Add the file
       formDataToSend.append("proofImage", proofImageFile);
-
-      // Add each detail as a separate field with indexed names
       formattedDetails.forEach((detail, index) => {
-        // Jika ini adalah update dan detail memiliki ID, sertakan ID
         if (detail.id) {
           formDataToSend.append(`details[${index}][id]`, detail.id);
         }
@@ -281,9 +240,6 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
         transactionDate: formattedDate,
         details: formattedDetails,
       };
-
-      console.log("Submitting JSON data:", jsonData);
-
       // Send JSON data
       onSubmit(jsonData, false);
     }
@@ -331,7 +287,7 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
                 const isoDate = new Date(
                   date.setHours(10, 30, 0)
                 ).toISOString();
-                console.log("Selected date in ISO format:", isoDate);
+
                 setFormData({
                   ...formData,
                   transactionDate: isoDate,
@@ -344,7 +300,7 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
               }
             }}
             dateFormat="dd/MM/yyyy"
-            className="block w-full px-3 py-2 text-sm transition-colors duration-200 border border-gray-300 rounded-md shadow-sm sm:text-base focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
+            className="block w-full py-2 pl-3 pr-32 text-sm transition-colors duration-200 border border-gray-300 rounded-md shadow-sm sm:text-base focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
             placeholderText="Pilih tanggal"
             required
             isClearable
@@ -405,6 +361,22 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
           </select>
         </div>
 
+        {/* Description */}
+        <div className="w-full">
+          <label className="block mb-1 text-sm font-medium text-gray-700 transition-colors duration-200 dark:text-gray-300">
+            Deskripsi <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            value={formData.description}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
+            rows="3"
+            className="block w-full px-3 py-2 text-sm transition-colors duration-200 border border-gray-300 rounded-md shadow-sm sm:text-base focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
+            required
+          />
+        </div>
+
         {/* Proof File Upload */}
         <div className="w-full">
           <label className="block mb-1 text-sm font-medium text-gray-700 transition-colors duration-200 dark:text-gray-300">
@@ -434,22 +406,6 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Description */}
-        <div className="w-full">
-          <label className="block mb-1 text-sm font-medium text-gray-700 transition-colors duration-200 dark:text-gray-300">
-            Deskripsi <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            rows="3"
-            className="block w-full px-3 py-2 text-sm transition-colors duration-200 border border-gray-300 rounded-md shadow-sm sm:text-base focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
-            required
-          />
         </div>
       </div>
 
@@ -490,7 +446,7 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 sm:gap-3">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-2 sm:gap-2">
                 {/* Product Selection */}
                 <div>
                   <label className="block mb-1 text-xs font-medium text-gray-700 transition-colors duration-200 sm:text-sm dark:text-gray-400">
@@ -570,7 +526,7 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
                 </div>
 
                 {/* Total Price Display */}
-                <div className="md:col-start-3">
+                <div>
                   <label className="block mb-1 text-xs font-medium text-gray-700 transition-colors duration-200 sm:text-sm dark:text-gray-400">
                     Total Harga
                   </label>
@@ -585,25 +541,27 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
       </div>
 
       {/* Total Amount Display */}
-      <div className="pt-4 mt-4 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex flex-col items-end justify-end">
-          <div className="text-sm text-gray-600 transition-colors duration-200 dark:text-gray-400">
-            Total Semua:
-          </div>
-          <div className="text-lg font-bold text-gray-900 transition-colors duration-200 sm:text-xl dark:text-white">
-            {displayTotalAmount}
+      <div className="flex items-center justify-between">
+        <div className="pt-4 mt-4 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col items-start justify-end">
+            <div className="text-sm text-gray-600 transition-colors duration-200 dark:text-gray-400">
+              Total Semua:
+            </div>
+            <div className="text-lg font-bold text-gray-900 transition-colors duration-200 sm:text-xl dark:text-white">
+              {displayTotalAmount}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Submit Button */}
-      <div className="flex justify-end pt-4 mt-4 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700">
-        <button
-          type="submit"
-          className="px-4 py-2 text-sm font-medium text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800"
-        >
-          {initialData ? "Perbarui" : "Tambah"}
-        </button>
+        {/* Submit Button */}
+        <div className="flex justify-end pt-4 mt-4 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700">
+          <button
+            type="submit"
+            className="px-4 py-2 text-sm font-medium text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-400 dark:focus:ring-offset-gray-800"
+          >
+            {initialData ? "Perbarui" : "Tambah"}
+          </button>
+        </div>
       </div>
     </form>
   );
