@@ -117,9 +117,7 @@ export default function Customers() {
           setSelectedCustomer(null);
         }
       })
-      .catch((error) => {
-        console.error("Delete failed:", error);
-      });
+      .catch((error) => {});
   };
 
   const handleViewCustomer = (customerItem) => {

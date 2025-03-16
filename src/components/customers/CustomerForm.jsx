@@ -54,7 +54,17 @@ export default function CustomerForm({ onSubmit, initialData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    // Pastikan semua field memiliki nilai default
+    const dataToSubmit = {
+      ...formData,
+      email: formData.email || null,
+      phone: formData.phone || null,
+      nimSiakad: formData.nimSiakad || null,
+      passwordSiakad: formData.passwordSiakad || null,
+    };
+
+    onSubmit(dataToSubmit);
   };
 
   const renderFormField = (
