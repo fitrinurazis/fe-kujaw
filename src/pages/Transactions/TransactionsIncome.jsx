@@ -22,7 +22,6 @@ export default function TransactionsIncome() {
   const isAdmin = location.pathname.includes("/admin");
   const { items, loading, error } = useSelector((state) => state.transactions);
 
-  // State management
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
 
@@ -43,7 +42,6 @@ export default function TransactionsIncome() {
   });
   const [statusUpdateLoading, setStatusUpdateLoading] = useState(false);
 
-  // Fetch transactions on component mount
   useEffect(() => {
     dispatch(fetchTransactions());
     return () => {
@@ -51,7 +49,6 @@ export default function TransactionsIncome() {
     };
   }, [dispatch]);
 
-  // Show error popup when error occurs
   useEffect(() => {
     if (error) {
       setErrorPopup({
@@ -64,10 +61,20 @@ export default function TransactionsIncome() {
   const incomeTransactions = items.filter((t) => t.type === "pemasukan");
 
   const formatTransactionForEdit = (transaction) => {
-    return {
+    let formattedDate = transaction.transactionDate;
+
+    if (formattedDate && !formattedDate.includes("T")) {
+      formattedDate = `${formattedDate}T10:30:00Z`;
+    } else if (!formattedDate) {
+      formattedDate = new Date().toISOString();
+    }
+
+    const formattedTransaction = {
       ...transaction,
       userId: transaction.userId?.toString(),
+      customerId: transaction.customerId?.toString(),
       totalAmount: transaction.totalAmount?.toString() || "0",
+      transactionDate: formattedDate,
       details:
         transaction.details?.map((detail) => ({
           id: detail.id,
@@ -78,12 +85,14 @@ export default function TransactionsIncome() {
           status: detail.status || "menunggu",
         })) || [],
     };
+
+    return formattedTransaction;
   };
 
   const handleSubmit = async (formData, isFormData = false) => {
     try {
       if (editingTransaction) {
-        await dispatch(
+        const result = await dispatch(
           updateIncomeTransaction({
             id: editingTransaction.id,
             data: formData,
@@ -205,7 +214,6 @@ export default function TransactionsIncome() {
         )}
       </div>
 
-      {/* Transaction Form Modal */}
       {isFormOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
           <div
@@ -237,7 +245,7 @@ export default function TransactionsIncome() {
           </div>
         </div>
       )}
-      {/* Loading State */}
+
       {loading ? (
         <div className="flex flex-col items-center justify-center p-6 transition-colors duration-200 bg-white rounded-lg shadow-sm sm:p-10 dark:bg-gray-800 dark:shadow-gray-900/10">
           <LoadingState message="Memuat transaksi pemasukan..." />
@@ -254,8 +262,6 @@ export default function TransactionsIncome() {
           />
         </div>
       )}
-
-      {/* Delete Confirmation Modal */}
       <DeleteConfirmationModal
         isOpen={deleteModal.isOpen}
         onClose={() =>
@@ -272,7 +278,6 @@ export default function TransactionsIncome() {
         message={`Apakah Anda yakin ingin menghapus transaksi pemasukan ini: ${deleteModal.transactionName}?`}
       />
 
-      {/* Success Popup */}
       <SuccessPopup
         isVisible={successPopup.isVisible}
         title={successPopup.title}
@@ -282,8 +287,6 @@ export default function TransactionsIncome() {
         }
         isAdmin={isAdmin}
       />
-
-      {/* Error Popup */}
       {errorPopup.isVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
           <div

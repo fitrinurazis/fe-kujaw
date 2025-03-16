@@ -114,17 +114,25 @@ export const updateExpenseTransaction = createAsyncThunk(
 
 export const updateIncomeTransaction = createAsyncThunk(
   "transactions/updateIncome",
-  async ({ id, data }, { rejectWithValue }) => {
+  async ({ id, data, isFormData = false }, { rejectWithValue }) => {
     try {
-      const payload = {
-        ...data,
-        type: "income",
-      };
+      let config = {};
+
+      // Set appropriate headers for FormData
+      if (isFormData) {
+        config = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+      }
 
       const response = await axios.put(
         `${API_URL}/api/transactions/income/${id}`,
-        payload
+        data,
+        config
       );
+
       return response.data;
     } catch (error) {
       return rejectWithValue(

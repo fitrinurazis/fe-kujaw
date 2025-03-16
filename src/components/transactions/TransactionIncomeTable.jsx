@@ -35,13 +35,21 @@ export default function TransactionIncomeTable({
     navigate(`${basePath}/transactions/${transactionId}`);
   };
 
-  // Format date helper
+  // Ubah formatDate untuk hanya menampilkan tanggal (tanpa waktu)
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    if (!dateString) return "-";
+
+    try {
+      // Selalu tampilkan hanya tanggal, meskipun data memiliki waktu
+      return new Date(dateString).toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    } catch (error) {
+      console.error("Error formatting date:", error, dateString);
+      return dateString; // Return original string if parsing fails
+    }
   };
 
   // Format currency helper

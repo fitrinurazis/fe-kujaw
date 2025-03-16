@@ -84,11 +84,24 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
         setProofImagePreview(imageUrl);
       }
 
+      // Format tanggal untuk inisialisasi
+      const formatDateForInitialization = (dateString) => {
+        if (!dateString) return new Date().toISOString();
+
+        // Jika tanggal sudah dalam format ISO, gunakan langsung
+        if (dateString.includes("T")) return dateString;
+
+        // Jika hanya tanggal (YYYY-MM-DD), tambahkan waktu default (10:30:00)
+        return `${dateString}T10:30:00Z`;
+      };
+
       // Make sure we're setting the form data with the correct date
       setFormData({
         ...initialData,
-        transactionDate:
-          initialData.transactionDate || new Date().toISOString().split("T")[0],
+
+        transactionDate: formatDateForInitialization(
+          initialData.transactionDate
+        ),
       });
     }
   }, [initialData]);
@@ -146,6 +159,51 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
     setDetails(updatedDetails);
   };
 
+  // Perbaikan pada useEffect untuk initialData
+  useEffect(() => {
+    if (initialData) {
+      // Initialize details if available
+      if (initialData.details && initialData.details.length > 0) {
+        const detailsWithPrices = initialData.details.map((detail) => ({
+          productId: detail.productId,
+          quantity: detail.quantity,
+          pricePerUnit: parseFloat(
+            detail.pricePerUnit || detail.product?.price || 0
+          ),
+          totalPrice: parseFloat(detail.totalPrice || 0),
+          status: detail.status || "menunggu",
+        }));
+        setDetails(detailsWithPrices);
+      }
+
+      // Initialize proof image preview
+      if (initialData.proofImage) {
+        const imageUrl = `${API_URL}/uploads/${initialData.proofImage}`;
+        setProofImagePreview(imageUrl);
+      }
+
+      // Format tanggal dengan benar untuk editing
+      let formattedDate = initialData.transactionDate;
+
+      // Jika tanggal tidak dalam format ISO, tambahkan waktu default
+      if (formattedDate && !formattedDate.includes("T")) {
+        formattedDate = `${formattedDate}T10:30:00Z`;
+      } else if (!formattedDate) {
+        // Jika tidak ada tanggal, gunakan tanggal hari ini dengan waktu default
+        formattedDate = new Date().toISOString();
+      }
+
+      console.log("Initializing form with date:", formattedDate);
+
+      // Set form data dengan tanggal yang sudah diformat
+      setFormData({
+        ...initialData,
+        transactionDate: formattedDate,
+      });
+    }
+  }, [initialData]);
+
+  // Perbaikan pada handleSubmit untuk update
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -161,11 +219,29 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
       return;
     }
 
-    // Format details with only productId and quantity for API
-    const formattedDetails = details.map((item) => ({
-      productId: item.productId,
-      quantity: parseInt(item.quantity) || 1,
-    }));
+    // Format details dengan productId, quantity, dan status
+    const formattedDetails = details.map((item) => {
+      const detailData = {
+        productId: item.productId,
+        quantity: parseInt(item.quantity) || 1,
+        status: item.status || "menunggu",
+      };
+
+      // Jika ini adalah update dan detail memiliki ID, sertakan ID
+      if (item.id) {
+        detailData.id = item.id;
+      }
+
+      return detailData;
+    });
+
+    // Pastikan tanggal dalam format ISO dengan waktu
+    let formattedDate = formData.transactionDate;
+    if (!formattedDate.includes("T")) {
+      formattedDate = `${formattedDate}T10:30:00Z`;
+    }
+
+    console.log("Submitting with transaction date:", formattedDate);
 
     if (proofImageFile) {
       // Create FormData for the entire request
@@ -176,16 +252,22 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
       formDataToSend.append("customerId", formData.customerId);
       formDataToSend.append("description", formData.description);
 
-      // Ensure we're using the selected date, not today's date
-      formDataToSend.append("transactionDate", formData.transactionDate);
+      // Ensure we're using the correctly formatted date
+      formDataToSend.append("transactionDate", formattedDate);
 
       // Add the file
       formDataToSend.append("proofImage", proofImageFile);
 
       // Add each detail as a separate field with indexed names
       formattedDetails.forEach((detail, index) => {
+        // Jika ini adalah update dan detail memiliki ID, sertakan ID
+        if (detail.id) {
+          formDataToSend.append(`details[${index}][id]`, detail.id);
+        }
+
         formDataToSend.append(`details[${index}][productId]`, detail.productId);
         formDataToSend.append(`details[${index}][quantity]`, detail.quantity);
+        formDataToSend.append(`details[${index}][status]`, detail.status);
       });
 
       // Send the FormData
@@ -196,15 +278,16 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
         userId: formData.userId,
         customerId: formData.customerId,
         description: formData.description,
-        transactionDate: formData.transactionDate, // Ensure we're using the selected date
+        transactionDate: formattedDate,
         details: formattedDetails,
       };
+
+      console.log("Submitting JSON data:", jsonData);
 
       // Send JSON data
       onSubmit(jsonData, false);
     }
   };
-
   // Add a new detail line item
   const addDetailItem = () => {
     setDetails([
@@ -241,15 +324,28 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
                 ? new Date(formData.transactionDate)
                 : null
             }
-            onChange={(date) =>
-              setFormData({
-                ...formData,
-                transactionDate: date ? date.toISOString().split("T")[0] : "",
-              })
-            }
+            onChange={(date) => {
+              if (date) {
+                // Tetap simpan dalam format ISO dengan waktu untuk backend
+                // Tapi hanya tampilkan tanggal di UI
+                const isoDate = new Date(
+                  date.setHours(10, 30, 0)
+                ).toISOString();
+                console.log("Selected date in ISO format:", isoDate);
+                setFormData({
+                  ...formData,
+                  transactionDate: isoDate,
+                });
+              } else {
+                setFormData({
+                  ...formData,
+                  transactionDate: "",
+                });
+              }
+            }}
             dateFormat="dd/MM/yyyy"
             className="block w-full px-3 py-2 text-sm transition-colors duration-200 border border-gray-300 rounded-md shadow-sm sm:text-base focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-400"
-            placeholderText="Select date"
+            placeholderText="Pilih tanggal"
             required
             isClearable
             showYearDropdown
@@ -257,7 +353,6 @@ export default function TransactionIncomeForm({ onSubmit, initialData }) {
             yearDropdownItemNumber={10}
           />
         </div>
-
         {/* Customer Dropdown */}
         <div className="w-full">
           <label className="block mb-1 text-sm font-medium text-gray-700 transition-colors duration-200 dark:text-gray-300">
