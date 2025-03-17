@@ -115,7 +115,9 @@ export default function Products() {
       (product) =>
         product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category?.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         (product.price && product.price.toString().includes(searchTerm))
     ) || [];
 
@@ -158,6 +160,7 @@ export default function Products() {
         </div>
       ) : (
         <div className="transition-colors duration-200 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:shadow-gray-900/10">
+          {/* Search Bar Component */}
           <SearchBar
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
@@ -173,6 +176,7 @@ export default function Products() {
             isAdmin={isAdmin}
           />
 
+          {/* Pagination Component */}
           <div className="px-6 py-3">
             <Pagination
               itemsPerPage={itemsPerPage}
