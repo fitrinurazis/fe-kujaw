@@ -1,15 +1,9 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import {
-  FiTrash2,
-  FiEye,
-  FiSearch,
-  FiUser,
-  FiMail,
-  FiPhone,
-} from "react-icons/fi";
+import { FiTrash2, FiEye, FiUser, FiMail, FiPhone } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../common/Pagination";
+import SearchBar from "../common/SearchBar";
 
 export default function SalesTable({ salesList, onDelete, loading, isAdmin }) {
   const navigate = useNavigate();
@@ -34,6 +28,9 @@ export default function SalesTable({ salesList, onDelete, loading, isAdmin }) {
   // Handle pagination page change
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Reset to first page
+  const resetPage = () => setCurrentPage(1);
+
   const handleViewSales = (salesId) => {
     const basePath = isAdmin ? "/admin" : "/sales";
     navigate(`${basePath}/sales/${salesId}`);
@@ -50,35 +47,13 @@ export default function SalesTable({ salesList, onDelete, loading, isAdmin }) {
 
   return (
     <div className="bg-white rounded-lg shadow-sm dark:bg-gray-800">
-      {/* Search Bar */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <FiSearch className="w-5 h-5 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            placeholder="Cari sales berdasarkan nama, email, atau telepon..."
-            className="block w-full p-2 pl-10 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1); // Reset to first page on search
-            }}
-          />
-          {searchTerm && (
-            <button
-              className="absolute inset-y-0 right-0 flex items-center pr-3"
-              onClick={() => {
-                setSearchTerm("");
-                setCurrentPage(1);
-              }}
-            >
-              <span className="text-gray-400 hover:text-gray-500">✕</span>
-            </button>
-          )}
-        </div>
-      </div>
+      {/* Search Bar Component */}
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        placeholder="Cari sales berdasarkan nama, email, atau telepon..."
+        resetPage={resetPage}
+      />
 
       {/* Mobile View */}
       <div className="block md:hidden">

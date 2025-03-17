@@ -18,7 +18,7 @@ export default function DashboardLayout() {
   }, [settings?.darkMode]);
 
   return (
-    <div className="flex h-screen transition-colors duration-200 bg-gray-200 dark:bg-gray-800">
+    <div className="flex h-screen transition-colors duration-200 bg-gray-200 dark:bg-slate-900">
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
       <div className="flex flex-col flex-1 w-full md:w-auto md:ml-72">

@@ -15,6 +15,8 @@ import DeleteConfirmationModal from "../../components/common/DeleteConfirmationM
 import SuccessPopup from "../../components/common/SuccessPopup";
 import { FaPlus } from "react-icons/fa";
 import LoadingState from "../../components/common/LoadingState";
+import SearchBar from "../../components/common/SearchBar";
+import Pagination from "../../components/common/Pagination";
 
 export default function TransactionsIncome() {
   const location = useLocation();
@@ -41,6 +43,9 @@ export default function TransactionsIncome() {
     message: "",
   });
   const [statusUpdateLoading, setStatusUpdateLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     dispatch(fetchTransactions());
@@ -92,7 +97,7 @@ export default function TransactionsIncome() {
   const handleSubmit = async (formData, isFormData = false) => {
     try {
       if (editingTransaction) {
-        const result = await dispatch(
+        await dispatch(
           updateIncomeTransaction({
             id: editingTransaction.id,
             data: formData,
@@ -194,6 +199,34 @@ export default function TransactionsIncome() {
     }
   };
 
+  const filteredTransactions =
+    incomeTransactions.filter(
+      (transaction) =>
+        transaction.description
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        transaction.customer?.name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        transaction.user?.name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        transaction.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (transaction.totalAmount &&
+          transaction.totalAmount.toString().includes(searchTerm))
+    ) || [];
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTransactions = filteredTransactions.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const resetPage = () => setCurrentPage(1);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="container px-4 py-4 mx-auto transition-colors duration-200 sm:px-6 lg:px-8 sm:py-6">
       <div className="flex items-center justify-between mb-4 sm:mb-6">
@@ -252,14 +285,32 @@ export default function TransactionsIncome() {
         </div>
       ) : (
         <div className="overflow-hidden transition-colors duration-200 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:shadow-gray-900/10">
+          {/* Search Bar Component */}
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder="Cari transaksi pemasukan berdasarkan ID, deskripsi, atau status..."
+            resetPage={resetPage}
+          />
+
           <TransactionIncomeTable
-            transactions={incomeTransactions}
+            transactions={currentTransactions}
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
             onStatusChange={handleStatusUpdate}
             isAdmin={isAdmin}
             statusUpdateLoading={statusUpdateLoading}
           />
+
+          {/* Pagination Component */}
+          <div className="px-6 py-3">
+            <Pagination
+              itemsPerPage={itemsPerPage}
+              totalItems={filteredTransactions.length}
+              paginate={paginate}
+              currentPage={currentPage}
+            />
+          </div>
         </div>
       )}
       <DeleteConfirmationModal

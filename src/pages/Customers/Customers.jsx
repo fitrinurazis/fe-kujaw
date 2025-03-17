@@ -15,6 +15,8 @@ import {
 } from "../../store/slices/customerSlice";
 import { FiPlus } from "react-icons/fi";
 import LoadingState from "../../components/common/LoadingState";
+import SearchBar from "../../components/common/SearchBar";
+import Pagination from "../../components/common/Pagination";
 
 const selectCustomers = createSelector(
   (state) => state.customers,
@@ -50,6 +52,10 @@ export default function Customers() {
     title: "",
     message: "",
   });
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     dispatch(getCustomers());
@@ -152,6 +158,26 @@ export default function Customers() {
     setSelectedCustomer(null);
   };
 
+  const filteredCustomers =
+    customers?.filter(
+      (customer) =>
+        customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.nimSiakad?.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || [];
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentCustomers = filteredCustomers.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const resetPage = () => setCurrentPage(1);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="p-3 mx-auto transition-colors duration-200 sm:p-4 lg:p-6">
       {viewMode === "list" ? (
@@ -179,13 +205,31 @@ export default function Customers() {
             </div>
           ) : (
             <div className="transition-colors duration-200 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:shadow-gray-900/10">
+              {/* Search Bar Component */}
+              <SearchBar
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                placeholder="Cari pelanggan berdasarkan nama, email, telepon, atau NIM..."
+                resetPage={resetPage}
+              />
+
               <CustomerTable
-                customers={customers}
+                customers={currentCustomers}
                 onView={handleViewCustomer}
                 onDelete={handleDeleteClick}
                 loading={loading}
                 isAdmin={isAdmin}
               />
+
+              {/* Pagination Component */}
+              <div className="px-6 py-3">
+                <Pagination
+                  itemsPerPage={itemsPerPage}
+                  totalItems={filteredCustomers.length}
+                  paginate={paginate}
+                  currentPage={currentPage}
+                />
+              </div>
             </div>
           )}
         </>

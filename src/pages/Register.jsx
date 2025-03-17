@@ -51,7 +51,7 @@ export default function Register() {
     dispatch(clearError());
 
     if (formData.password !== formData.confirmPassword) {
-      setPasswordError("Passwords do not match");
+      setPasswordError("Password tidak cocok!");
       return;
     }
 
@@ -91,8 +91,8 @@ export default function Register() {
         </div>
       </div>
 
-      <div className="relative z-10 flex items-center justify-center w-full px-8 py-8 lg:w-1/2 md:px-16">
-        <div className="w-full max-w-md p-8 transition-colors duration-200 shadow-xl backdrop-blur-lg bg-white/90 dark:bg-gray-800/90 dark:backdrop-blur-lg rounded-2xl">
+      <div className="relative z-10 flex items-center justify-center w-full px-6 py-8 lg:w-1/2 md:px-16">
+        <div className="w-full max-w-md p-6 transition-colors duration-200 shadow-xl backdrop-blur-lg bg-white/90 dark:bg-gray-800/90 dark:backdrop-blur-lg rounded-2xl">
           <div className="mb-12 text-center">
             <h2 className="mb-2 text-3xl font-bold text-gray-900 transition-colors duration-200 dark:text-white">
               Buat Akun
@@ -125,7 +125,7 @@ export default function Register() {
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full px-4 py-3 transition-all duration-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-400"
-                placeholder="Enter your full name"
+                placeholder="Masukkan nama lengkap"
                 required
               />
             </div>
@@ -140,7 +140,7 @@ export default function Register() {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full px-4 py-3 transition-all duration-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-400"
-                placeholder="Enter your email"
+                placeholder="Masukkan email"
                 required
               />
             </div>
@@ -155,7 +155,7 @@ export default function Register() {
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full px-4 py-3 transition-all duration-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-400"
-                placeholder="Enter your phone number"
+                placeholder="Masukkan nomor telepon"
                 required
               />
             </div>
@@ -170,7 +170,7 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 className="w-full px-4 py-3 transition-all duration-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-400"
-                placeholder="Create a password"
+                placeholder="Buat password"
                 required
               />
             </div>
@@ -185,7 +185,7 @@ export default function Register() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className="w-full px-4 py-3 transition-all duration-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-400"
-                placeholder="Confirm your password"
+                placeholder="Konfirmasi password"
                 required
               />
             </div>
@@ -214,8 +214,8 @@ export default function Register() {
 
       <SuccessPopup
         isVisible={showSuccess}
-        title="Registration Successful!"
-        message="Your account has been created successfully. Please login to continue."
+        title="Pendaftaran Berhasil!"
+        message="Akun Anda telah dibuat dengan sukses. Silakan masuk untuk melanjutkan."
         onClose={handleSuccessClose}
       />
     </div>

@@ -46,35 +46,26 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       title: "Dashboard",
       path: `${basePath}/dashboard`,
     },
-    // For admin: Show Transaksi as dropdown
-    // For sales: Show Transaksi as single menu item
-    ...(isAdmin
-      ? [
-          {
-            title: "Transaksi",
-            isDropdown: true,
-            items: [
-              {
-                title: "Semua Transaksi",
-                path: `${basePath}/transactions`,
-              },
-              {
-                title: "Transaksi Pemasukan",
-                path: `${basePath}/transactions/income`,
-              },
-              {
-                title: "Transaksi Pengeluaran",
-                path: `${basePath}/transactions/expense`,
-              },
-            ],
-          },
-        ]
-      : [
-          {
-            title: "Transaksi",
-            path: `${basePath}/transactions`,
-          },
-        ]),
+
+    {
+      title: "Transaksi",
+      isDropdown: true,
+      items: [
+        {
+          title: "Semua Transaksi",
+          path: `${basePath}/transactions`,
+        },
+        {
+          title: "Transaksi Pemasukan",
+          path: `${basePath}/transactions/income`,
+        },
+        {
+          title: "Transaksi Pengeluaran",
+          path: `${basePath}/transactions/expense`,
+        },
+      ],
+    },
+
     {
       title: "Pelanggan",
       path: `${basePath}/customers`,

@@ -13,6 +13,8 @@ import {
   updateProduct,
 } from "../store/slices/productSlide";
 import { FiPlus } from "react-icons/fi";
+import SearchBar from "../components/common/SearchBar";
+import Pagination from "../components/common/Pagination";
 
 const selectProducts = createSelector(
   (state) => state.products,
@@ -43,6 +45,10 @@ export default function Products() {
     title: "",
     message: "",
   });
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     dispatch(getProducts());
@@ -104,6 +110,26 @@ export default function Products() {
     setIsFormOpen(true);
   };
 
+  const filteredProducts =
+    products?.filter(
+      (product) =>
+        product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (product.price && product.price.toString().includes(searchTerm))
+    ) || [];
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const resetPage = () => setCurrentPage(1);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="p-3 mx-auto transition-colors duration-200 sm:p-4 lg:p-6 dark:text-gray-200">
       <div className="flex flex-wrap items-center justify-between mb-4 sm:mb-6">
@@ -132,13 +158,29 @@ export default function Products() {
         </div>
       ) : (
         <div className="transition-colors duration-200 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:shadow-gray-900/10">
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder="Cari produk berdasarkan nama, deskripsi, atau kategori..."
+            resetPage={resetPage}
+          />
+
           <ProductTable
-            products={products}
+            products={currentProducts}
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
             loading={loading}
             isAdmin={isAdmin}
           />
+
+          <div className="px-6 py-3">
+            <Pagination
+              itemsPerPage={itemsPerPage}
+              totalItems={filteredProducts.length}
+              paginate={paginate}
+              currentPage={currentPage}
+            />
+          </div>
         </div>
       )}
 

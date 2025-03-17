@@ -34,7 +34,7 @@ export default function Navbar({ toggleSidebar }) {
       await logout();
       window.location.href = "/login";
     } catch (error) {
-      console.error("Logout failed:", error);
+      throw new Error("Gagal keluar: " + error.message);
     }
   };
 
@@ -44,9 +44,9 @@ export default function Navbar({ toggleSidebar }) {
 
   return (
     <>
-      <nav className="transition-colors duration-200 bg-white shadow-sm rounded-2xl dark:bg-gray-800 dark:text-white dark:shadow-gray-900/10">
+      <nav className="transition-colors duration-200 bg-white shadow-sm rounded-2xl dark:bg-gray-800 dark:text-white dark:shadow-gray-900">
         <div className="px-4 mx-auto">
-          <div className="flex justify-between h-16">
+          <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               {isSettingsPage ? (
                 <button
@@ -80,7 +80,7 @@ export default function Navbar({ toggleSidebar }) {
                   </span>
                 </button>
                 {showProfile && (
-                  <div className="absolute right-0 z-50 w-48 mt-2 transition-colors duration-200 bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:shadow-gray-900/20">
+                  <div className="absolute right-0 z-50 w-48 mt-2 transition-colors duration-200 bg-white rounded-lg shadow-md dark:bg-gray-800 dark:shadow-gray-600">
                     <div className="py-2">
                       <NavLink
                         to={isAdmin ? "/admin/profile" : "/sales/profile"}

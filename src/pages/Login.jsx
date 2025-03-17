@@ -55,8 +55,8 @@ export default function Login() {
     <div className="relative flex min-h-screen overflow-hidden transition-colors duration-200 bg-gray-50 dark:bg-gray-900">
       <SuccessPopup
         isVisible={showSuccessModal}
-        title="Login Successful!"
-        message="You will be redirected to dashboard shortly"
+        title="Berhasil Masuk!"
+        message="Anda akan segera dialihkan ke dashboard."
         onClose={() => setShowSuccessModal(false)}
       />
       <WavePattern />
@@ -68,8 +68,8 @@ export default function Login() {
         </div>
       </div>
 
-      <div className="relative z-10 flex items-center justify-center w-full px-8 py-8 lg:w-1/2 md:px-16">
-        <div className="w-full max-w-md p-8 transition-colors duration-200 shadow-xl backdrop-blur-lg bg-white/80 dark:bg-gray-800/90 dark:backdrop-blur-lg rounded-2xl">
+      <div className="relative z-10 flex items-center justify-center w-full px-6 py-8 lg:w-1/2 md:px-16">
+        <div className="w-full max-w-md p-6 transition-colors duration-200 shadow-xl backdrop-blur-lg bg-white/80 dark:bg-gray-800/90 dark:backdrop-blur-lg rounded-2xl">
           <div className="mb-12 text-center">
             <h2 className="mb-2 text-3xl font-bold text-gray-900 transition-colors duration-200 dark:text-white">
               Masuk
@@ -95,7 +95,7 @@ export default function Login() {
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
                 className="w-full px-4 py-3 transition-colors duration-200 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-400"
-                placeholder="Enter your email or username"
+                placeholder="Masukkan email atau nomor telepon"
                 required
               />
             </div>
@@ -109,7 +109,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 transition-colors duration-200 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-400"
-                placeholder="Enter your password"
+                placeholder="Masukkan password"
                 required
               />
             </div>

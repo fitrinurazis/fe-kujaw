@@ -102,13 +102,7 @@ export default function AdminDashboard() {
               />
             }
           />
-          <SummaryCard
-            title="Penjualan Bulanan"
-            amount={`Rp ${summary.monthlySales?.toLocaleString() || 0}`}
-            icon={
-              <FiDollarSign className="text-purple-500 dark:text-purple-400" />
-            }
-          />
+
           <SummaryCard
             title="Total Produk"
             amount={summary.totalProducts || 0}
@@ -130,23 +124,6 @@ export default function AdminDashboard() {
       )}
       <div className="grid grid-cols-1 gap-4 mb-6 lg:grid-cols-2 lg:gap-6">
         {/* Charts Section */}
-
-        <div className="p-3 transition-colors duration-200 bg-white rounded-lg shadow sm:p-4 lg:p-5 dark:bg-gray-800 dark:shadow-gray-900/10">
-          <h3 className="mb-3 text-base font-semibold transition-colors duration-200 sm:text-lg lg:mb-4 dark:text-white">
-            Tren Penjualan
-          </h3>
-          <div className="w-full h-64 sm:h-72 lg:h-80">
-            {salesChart && salesChart.length > 0 ? (
-              <SalesChart data={salesChart} />
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                <p className="text-sm text-center text-gray-500 transition-colors duration-200 sm:text-base dark:text-gray-400">
-                  Tidak ada data penjualan
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
 
         <div className="p-3 transition-colors duration-200 bg-white rounded-lg shadow sm:p-4 lg:p-5 dark:bg-gray-800 dark:shadow-gray-900/10">
           <h3 className="mb-3 text-base font-semibold transition-colors duration-200 sm:text-lg lg:mb-4 dark:text-white">

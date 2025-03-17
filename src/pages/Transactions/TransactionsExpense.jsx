@@ -15,6 +15,8 @@ import DeleteConfirmationModal from "../../components/common/DeleteConfirmationM
 import SuccessPopup from "../../components/common/SuccessPopup";
 import { FaPlus } from "react-icons/fa";
 import LoadingState from "../../components/common/LoadingState";
+import SearchBar from "../../components/common/SearchBar";
+import Pagination from "../../components/common/Pagination";
 
 export default function TransactionsExpense() {
   const location = useLocation();
@@ -40,6 +42,9 @@ export default function TransactionsExpense() {
     message: "",
   });
   const [statusUpdateLoading, setStatusUpdateLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // Fetch transactions on component mount
   useEffect(() => {
@@ -60,6 +65,37 @@ export default function TransactionsExpense() {
   }, [error]);
 
   const expenseTransactions = items.filter((t) => t.type === "pengeluaran");
+
+  const filteredTransactions =
+    expenseTransactions.filter(
+      (transaction) =>
+        transaction.description
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        transaction.customer?.name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        transaction.user?.name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        transaction.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (transaction.totalAmount &&
+          transaction.totalAmount.toString().includes(searchTerm))
+    ) || [];
+
+  // Add pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTransactions = filteredTransactions.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  // Add this function to reset page
+  const resetPage = () => setCurrentPage(1);
+
+  // Add this function to handle pagination
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleSubmit = async (formData, isFormData = false) => {
     try {
@@ -272,14 +308,32 @@ export default function TransactionsExpense() {
         </div>
       ) : (
         <div className="overflow-hidden transition-colors duration-200 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:shadow-gray-900/10">
+          {/* Search Bar Component */}
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder="Cari transaksi pengeluaran berdasarkan ID, deskripsi, atau status..."
+            resetPage={resetPage}
+          />
+
           <TransactionExpenseTable
-            transactions={expenseTransactions}
+            transactions={currentTransactions}
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
             onStatusChange={handleStatusUpdate}
             isAdmin={isAdmin}
             statusUpdateLoading={statusUpdateLoading}
           />
+
+          {/* Pagination Component */}
+          <div className="px-6 py-3">
+            <Pagination
+              itemsPerPage={itemsPerPage}
+              totalItems={filteredTransactions.length}
+              paginate={paginate}
+              currentPage={currentPage}
+            />
+          </div>
         </div>
       )}
 

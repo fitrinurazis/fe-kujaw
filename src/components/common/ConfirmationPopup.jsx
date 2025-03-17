@@ -21,23 +21,23 @@ const ConfirmationPopup = ({ isVisible, onConfirm, onCancel }) => {
             </svg>
           </div>
           <h3 className="mb-4 text-2xl font-bold text-gray-900 transition-colors duration-200 dark:text-white">
-            Confirm Logout
+            Konfirmasi Keluar
           </h3>
           <p className="mb-6 text-gray-600 transition-colors duration-200 dark:text-gray-300">
-            Are you sure you want to logout?
+            Apakah Anda yakin ingin keluar dari aplikasi?
           </p>
           <div className="flex justify-center space-x-4">
             <button
               onClick={onCancel}
               className="px-6 py-2 text-gray-700 transition-colors bg-gray-200 rounded-lg hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
             >
-              Cancel
+              Batal
             </button>
             <button
               onClick={onConfirm}
               className="px-6 py-2 text-white transition-colors bg-red-500 rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
             >
-              Logout
+              Keluar
             </button>
           </div>
         </div>
